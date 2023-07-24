@@ -1,0 +1,35 @@
+name: "WinterOlympic"
+title: "冬奥会智能分析与预测系统"
+mode: "dev"
+port: 3600
+version: "v0.0.1"
+
+log:
+  level: "debug"
+  filename: "WinterOlympic.log"
+  max_size: 200
+  max_age: 30
+  max_backips: 7
+
+mysql:
+  host: "192.144.235.64"
+  port: 3306
+  user: "root"
+  password: "lijianmin"
+  dbname: "winterolympicgames"
+  max_open_conns: 200
+  max_idle_conns: "50"
+
+redis:
+  host: "192.144.235.64"
+  port: 6379
+  password: "123456"
+  db: 3
+  pool_size: 100
+
+email:
+  user: "1019528265@qq.com"
+  pass: "gdrqclrbnalfbcdf"
+  host: "smtp.qq.com"
+  port: 465
+  rename: "WinterOlympic"

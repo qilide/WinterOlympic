@@ -1,0 +1,663 @@
+definitions:
+  account.LoginBinder:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  account.MailBinder:
+    properties:
+      email:
+        type: string
+    type: object
+  account.RegisterBinder:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  country.CountryBinder:
+    properties:
+      country_id:
+        type: string
+      year:
+        type: string
+    type: object
+  country.CountryIdBinder:
+    properties:
+      country_id:
+        type: string
+    type: object
+  response.Information:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  response.SuccessLogin:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+      token:
+        type: string
+    type: object
+  sports.SportsName:
+    properties:
+      sport_name:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: 本系统展示了前八界冬奥会数据和预测了下一届冬奥会各个国家获得的奖牌信息
+  title: 冬奥会智能分析与预测系统
+  version: "1.0"
+paths:
+  /account/login:
+    post:
+      consumes:
+      - application/json
+      description: 用于用户登录
+      parameters:
+      - description: 登录参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/account.LoginBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登陆成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 邮箱或者密码错误
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入邮箱或者密码
+          schema:
+            $ref: '#/definitions/response.Information'
+        "403":
+          description: 该用户未注册
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户登录
+      tags:
+      - 登录
+  /account/logout:
+    get:
+      consumes:
+      - application/json
+      description: 用于登录用户注销
+      parameters:
+      - description: 注销参数
+        in: query
+        name: email
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注销成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 注销失败
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 您还未登录
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户注销
+      tags:
+      - 注销
+  /account/mail:
+    post:
+      consumes:
+      - application/json
+      description: 新用户发送验证码用于注册账号
+      parameters:
+      - description: 发送邮件参数
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/account.MailBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 发送验证码成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 邮件发送失败
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入邮箱或者密码
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 发送验证码邮件
+      tags:
+      - 验证码
+  /account/register:
+    post:
+      consumes:
+      - application/json
+      description: 用于新用户注册账号使用
+      parameters:
+      - description: 注册参数
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/account.RegisterBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注册成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 邮箱已注册
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 验证码错误
+          schema:
+            $ref: '#/definitions/response.Information'
+        "403":
+          description: 请输入完整的信息
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 新用户注册
+      tags:
+      - 注册
+  /country/medal_athlete:
+    post:
+      consumes:
+      - application/json
+      description: 国家详细运动员获得奖牌
+      parameters:
+      - description: 国家id/年份
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/country.CountryBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 该国家运动员在此届冬奥会未获得奖牌
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入正确的信息
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家详细运动员获得奖牌
+      tags:
+      - 国家详细运动员获得奖牌
+  /country/medal_information:
+    post:
+      consumes:
+      - application/json
+      description: 国家奖牌信息展示
+      parameters:
+      - description: 国家id/年份
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/country.CountryBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 该国家在此届冬奥会未获得奖牌
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入正确的信息
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家奖牌信息展示
+      tags:
+      - 国家奖牌信息展示
+  /country/medal_sports:
+    post:
+      consumes:
+      - application/json
+      description: 国家详细项目获得奖牌
+      parameters:
+      - description: 国家id/年份
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/country.CountryBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 该国家在此届冬奥会未获得奖牌
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入正确的信息
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家详细项目获得奖牌
+      tags:
+      - 国家详细项目获得奖牌
+  /country/moments:
+    post:
+      consumes:
+      - application/json
+      description: 项目精彩时刻
+      parameters:
+      - description: 项目名称
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/sports.SportsName'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 未查询到此比赛的精彩视频
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入比赛项目名称
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 项目精彩时刻
+      tags:
+      - 项目精彩时刻
+  /country/predict:
+    post:
+      consumes:
+      - application/json
+      description: 国家奖牌预测
+      parameters:
+      - description: 国家id
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/country.CountryIdBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 该国家在前八届冬奥会未获得奖牌,故无法预测
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入正确的信息
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家奖牌预测
+      tags:
+      - 国家奖牌预测
+  /country/top_athlete:
+    post:
+      consumes:
+      - application/json
+      description: 国家风云人物
+      parameters:
+      - description: 年份
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/country.CountryIdBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 该国家运动员在前八届冬奥会未获得奖牌
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入正确的信息
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家风云人物
+      tags:
+      - 国家风云人物
+  /country/top_sports:
+    post:
+      consumes:
+      - application/json
+      description: 国家强势项目
+      parameters:
+      - description: 国家id/年份
+        in: body
+        name: object
+        schema:
+          $ref: '#/definitions/country.CountryBinder'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.SuccessLogin'
+        "401":
+          description: 该国家在此届冬奥会未获得奖牌
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 请输入正确的信息
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家强势项目
+      tags:
+      - 国家强势项目
+  /sports/athlete_medal:
+    get:
+      consumes:
+      - application/json
+      description: 运动员奖牌数量排行
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 运动员奖牌数量排行
+      tags:
+      - 运动员奖牌数量排行
+  /sports/athlete_medal_detail:
+    get:
+      consumes:
+      - application/json
+      description: 运动员奖牌数量排行(详细)
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      - description: 页数
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 页数不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 运动员奖牌数量排行(详细)
+      tags:
+      - 运动员奖牌数量排行(详细)
+  /sports/china_medal:
+    get:
+      consumes:
+      - application/json
+      description: 中国项目奖牌数量排行
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 中国项目奖牌数量排行
+      tags:
+      - 中国项目奖牌数量排行
+  /sports/china_medal_detail:
+    get:
+      consumes:
+      - application/json
+      description: 中国项目奖牌数量排行(详细)
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 中国项目奖牌数量排行(详细)
+      tags:
+      - 中国项目奖牌数量排行(详细)
+  /sports/country_medal:
+    get:
+      consumes:
+      - application/json
+      description: 国家奖牌数量排行
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家奖牌数量排行
+      tags:
+      - 国家奖牌数量排行
+  /sports/country_medal_detail:
+    get:
+      consumes:
+      - application/json
+      description: 国家奖牌数量排行(详细)
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      - description: 页数
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+        "402":
+          description: 页数不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家奖牌数量排行(详细)
+      tags:
+      - 国家奖牌数量排行(详细)
+  /sports/country_message:
+    get:
+      consumes:
+      - application/json
+      description: 国家信息
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 国家信息
+      tags:
+      - 国家信息
+  /sports/sports_medal:
+    get:
+      consumes:
+      - application/json
+      description: 项目奖牌数量排行
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 项目奖牌数量排行
+      tags:
+      - 项目奖牌数量排行
+  /sports/sports_medal_detail:
+    get:
+      consumes:
+      - application/json
+      description: 项目奖牌数量排行(详细)
+      parameters:
+      - description: 年份
+        in: query
+        name: year
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/response.Information'
+        "401":
+          description: 数据不存在
+          schema:
+            $ref: '#/definitions/response.Information'
+      security:
+      - ApiKeyAuth: []
+      summary: 项目奖牌数量排行(详细)
+      tags:
+      - 项目奖牌数量排行(详细)
+swagger: "2.0"
