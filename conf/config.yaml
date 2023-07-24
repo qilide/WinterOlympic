@@ -12,24 +12,24 @@ log:
   max_backips: 7
 
 mysql:
-  host: "192.144.235.64"
+  host: "127.0.0.1"
   port: 3306
   user: "root"
-  password: "lijianmin"
+  password: "123456"
   dbname: "winterolympicgames"
   max_open_conns: 200
   max_idle_conns: "50"
 
 redis:
-  host: "192.144.235.64"
+  host: "127.0.0.1"
   port: 6379
   password: "123456"
   db: 3
   pool_size: 100
 
 email:
-  user: "1019528265@qq.com"
-  pass: "gdrqclrbnalfbcdf"
+  user: "###@qq.com"
+  pass: "******"
   host: "smtp.qq.com"
   port: 465
   rename: "WinterOlympic"
